@@ -1,4 +1,5 @@
 import cv2
+import pygame
 from deepface import DeepFace
 
 def detect_faces(frame):
@@ -16,6 +17,12 @@ def draw_emotion_text(frame, face, emotion):
                   (text_position[0] + text_size[0], text_position[1]), (0, 0, 0), -1)
     cv2.putText(frame, emotion, text_position, cv2.FONT_HERSHEY_SIMPLEX, font_scale, (255, 255, 255), 2)
 
+def play_alert_sound(emotion):
+    if emotion in ["sad", "angry"]:
+        pygame.mixer.init()
+        alert_sound = pygame.mixer.Sound("alert.wav")
+        alert_sound.play()
+
 def main():
     cam = cv2.VideoCapture(1)
     if not cam.isOpened():
@@ -32,6 +39,7 @@ def main():
             cv2.rectangle(frame, (face[0], face[1]), (face[0] + face[2], face[1] + face[3]), (255,0,0), 3)
             emotion = res[0]['dominant_emotion']
             draw_emotion_text(frame, face, emotion)
+            play_alert_sound(emotion)
 
         cv2.imshow("yayy", frame)
         
