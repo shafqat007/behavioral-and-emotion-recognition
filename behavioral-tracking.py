@@ -5,30 +5,21 @@ from imutils import face_utils
 
 print("Imported Successfully!")
 
-# cap = cv2.VideoCapture(0)
-cap = cv2.VideoCapture(1)
-if not cap.isOpened():
-    cap = cv2.VideoCapture(0)
-if not cap.isOpened():
-    raise IOError("Cannot open webcam")
-    
+def initialize_camera():
+    cap = cv2.VideoCapture(1)
+    if not cap.isOpened():
+        cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        raise IOError("Cannot open webcam")
+    return cap
 
-face_detector = dlib.get_frontal_face_detector()
-faceLandmarks = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-
-sleepiness = 0
-drowsiness = 0
-awakeness = 0
-activity = ""
-color = (0,0,0)
-
-def distance(Px, Py):
+def calculate_distance(Px, Py):
     displacement = np.linalg.norm(Px - Py)
     return displacement
 
-def blinking_detection(a, b, c, d, e, f):
-    short_distance = distance(b, d) + distance(c, e)
-    long_distance = distance(a, f)
+def detect_blinking(a, b, c, d, e, f):
+    short_distance = calculate_distance(b, d) + calculate_distance(c, e)
+    long_distance = calculate_distance(a, f)
     ratio = short_distance / (2.0 * long_distance)
 
     if ratio > 0.25:
@@ -38,7 +29,7 @@ def blinking_detection(a, b, c, d, e, f):
     else:
         return 0
 
-def lip_distance(shape):
+def detect_lip_distance(shape):
     top_lip = shape[50:53]
     top_lip = np.concatenate((top_lip, shape[61:64]))
 
@@ -55,8 +46,7 @@ def lip_distance(shape):
     else:
         return 4
 
-def detect_face_features(face):
-    x1, y1, x2, y2 = face.left(), face.top(), face.right(), face.bottom()
+def detect_face_features(face, gray, faceLandmarks):
     landmarks = faceLandmarks(gray, face)
     landmarks = face_utils.shape_to_np(landmarks)
     return landmarks
@@ -97,6 +87,17 @@ def draw_activity_text(frame, activity, color):
     cv2.rectangle(frame, (10, 5), (445, 40), (255, 255, 255), -1)
     cv2.putText(frame, activity, (15, 30), cv2.FONT_HERSHEY_COMPLEX, 1, color, 2)
 
+cap = initialize_camera()
+
+face_detector = dlib.get_frontal_face_detector()
+faceLandmarks = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+
+sleepiness = 0
+drowsiness = 0
+awakeness = 0
+activity = ""
+color = (0, 0, 0)
+
 while True:
     ret, frame = cap.read()
 
@@ -106,12 +107,12 @@ while True:
 
     if len(faces) > 0:
         for face in faces:
-            landmarks = detect_face_features(face)
-            left_eye = blinking_detection(landmarks[36], landmarks[37], landmarks[38],
-                                           landmarks[41], landmarks[40], landmarks[39])
-            right_eye = blinking_detection(landmarks[42], landmarks[43], landmarks[44],
-                                            landmarks[47], landmarks[46], landmarks[45])
-            mar = lip_distance(landmarks)
+            landmarks = detect_face_features(face, gray, faceLandmarks)
+            left_eye = detect_blinking(landmarks[36], landmarks[37], landmarks[38],
+                                        landmarks[41], landmarks[40], landmarks[39])
+            right_eye = detect_blinking(landmarks[42], landmarks[43], landmarks[44],
+                                         landmarks[47], landmarks[46], landmarks[45])
+            mar = detect_lip_distance(landmarks)
 
             check_activity(left_eye, right_eye, mar)
 
