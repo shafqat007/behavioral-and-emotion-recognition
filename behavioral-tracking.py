@@ -2,6 +2,7 @@ import cv2
 import dlib
 import numpy as np
 from imutils import face_utils
+import pygame
 
 print("Imported Successfully!")
 
@@ -61,6 +62,8 @@ def check_activity(left_eye, right_eye, mar):
         if sleepiness > 6:
             activity = "Alert! Are you sleeping?"
             color = (0, 0, 255)
+            if sound_enabled:
+                play_alert_sound()
     elif left_eye == 1 or right_eye == 1 or mar == 3:
         sleepiness = 0
         drowsiness += 1
@@ -68,6 +71,8 @@ def check_activity(left_eye, right_eye, mar):
         if drowsiness > 6:
             activity = "Hushh! You look sleepy!"
             color = (0, 0, 0)
+            if sound_enabled:
+                play_alert_sound()
     elif left_eye == 2 or right_eye == 2 and mar == 4:
         drowsiness = 0
         sleepiness = 0
@@ -87,6 +92,11 @@ def draw_activity_text(frame, activity, color):
     cv2.rectangle(frame, (10, 5), (445, 40), (255, 255, 255), -1)
     cv2.putText(frame, activity, (15, 30), cv2.FONT_HERSHEY_COMPLEX, 1, color, 2)
 
+def play_alert_sound():
+    pygame.mixer.init()
+    alert_sound = pygame.mixer.Sound("alert.wav")
+    alert_sound.play()
+
 cap = initialize_camera()
 
 face_detector = dlib.get_frontal_face_detector()
@@ -97,6 +107,9 @@ drowsiness = 0
 awakeness = 0
 activity = ""
 color = (0, 0, 0)
+
+pygame.mixer.init()  # Initialize pygame mixer
+sound_enabled = True  # Set to False if you want to disable sound
 
 while True:
     ret, frame = cap.read()
@@ -125,7 +138,7 @@ while True:
     cv2.imshow("Hola!", frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        break
 
 cap.release()
 cv2.destroyAllWindows()
