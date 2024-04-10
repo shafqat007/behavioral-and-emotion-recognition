@@ -2,13 +2,10 @@ import cv2
 import dlib
 import numpy as np
 from imutils import face_utils
-# from ClassificationModule import Classifier
 
 print("Imported Successfully!")
 
-# cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 cap = cv2.VideoCapture(0)
-# myClassifier = Classifier('converted_keras\keras_model.h5', 'converted_keras\labels.txt')
 
 face_detector = dlib.get_frontal_face_detector()
 faceLandmarks = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
@@ -19,18 +16,18 @@ awakeness = 0
 activity = ""
 color = (0,0,0)
 
-def distance(Px,Py):
+def distance(Px, Py):
     displacement = np.linalg.norm(Px - Py)
     return displacement
-    
-def blinkingDetection(a,b,c,d,e,f):
-    short_distance = distance(b,d) + distance(c,e)
-    long_distance = distance(a,f)
-    ratio = short_distance / (2.0*long_distance)
 
-    if (ratio > 0.25):
+def blinking_detection(a, b, c, d, e, f):
+    short_distance = distance(b, d) + distance(c, e)
+    long_distance = distance(a, f)
+    ratio = short_distance / (2.0 * long_distance)
+
+    if ratio > 0.25:
         return 2
-    elif (ratio > 0.21 and ratio <= 0.25):
+    elif 0.21 < ratio <= 0.25:
         return 1
     else:
         return 0
@@ -46,79 +43,83 @@ def lip_distance(shape):
     low_mean = np.mean(low_lip, axis=0)
 
     mouth_aspect_distance = abs(top_mean[1] - low_mean[1])
-    #print(mouth_aspect_distance)
-    if (mouth_aspect_distance > 20):
+
+    if mouth_aspect_distance > 20:
         return 3
     else:
         return 4
 
+def detect_face_features(face):
+    x1, y1, x2, y2 = face.left(), face.top(), face.right(), face.bottom()
+    landmarks = faceLandmarks(gray, face)
+    landmarks = face_utils.shape_to_np(landmarks)
+    return landmarks
+
+def check_activity(left_eye, right_eye, mar):
+    global sleepiness, drowsiness, awakeness, activity, color
+
+    if left_eye == 0 or right_eye == 0 or mar == 0:
+        sleepiness += 1
+        drowsiness = 0
+        awakeness = 0
+        if sleepiness > 6:
+            activity = "Alert! Are you sleeping?"
+            color = (0, 0, 255)
+    elif left_eye == 1 or right_eye == 1 or mar == 3:
+        sleepiness = 0
+        drowsiness += 1
+        awakeness = 0
+        if drowsiness > 6:
+            activity = "Hushh! You look sleepy!"
+            color = (0, 0, 0)
+    elif left_eye == 2 or right_eye == 2 and mar == 4:
+        drowsiness = 0
+        sleepiness = 0
+        awakeness += 1
+        if awakeness > 6:
+            activity = "Having a safe driving!"
+            color = (0, 255, 0)
+    elif left_eye == 2 or right_eye == 2 and mar == 3:
+        drowsiness = 0
+        sleepiness += 1
+        awakeness = 0
+        if sleepiness > 1:
+            activity = "Hushh! You look sleepy!"
+            color = (0, 255, 0)
+
+def draw_activity_text(frame, activity, color):
+    cv2.rectangle(frame, (10, 5), (445, 40), (255, 255, 255), -1)
+    cv2.putText(frame, activity, (15, 30), cv2.FONT_HERSHEY_COMPLEX, 1, color, 2)
+
 while True:
     ret, frame = cap.read()
-    # predictions = myClassifier.getPrediction(frame)
-    
+
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     faces = face_detector(gray)
-    #print(len(faces))
+
     if len(faces) > 0:
         for face in faces:
-            x1 = face.left()
-            y1 = face.top()
-            x2 = face.right()
-            y2 = face.bottom()
-
-            landmarks = faceLandmarks(gray,face)
-            #print(landmarks)
-            landmarks = face_utils.shape_to_np(landmarks)
-            #print(landmarks)
-            
-            left_eye = blinkingDetection(landmarks[36],landmarks[37],landmarks[38],landmarks[41],landmarks[40],landmarks[39])
-            #print(left_eye)
-            right_eye = blinkingDetection(landmarks[42],landmarks[43],landmarks[44],landmarks[47],landmarks[46],landmarks[45])
-            #print(right_eye)
+            landmarks = detect_face_features(face)
+            left_eye = blinking_detection(landmarks[36], landmarks[37], landmarks[38],
+                                           landmarks[41], landmarks[40], landmarks[39])
+            right_eye = blinking_detection(landmarks[42], landmarks[43], landmarks[44],
+                                            landmarks[47], landmarks[46], landmarks[45])
             mar = lip_distance(landmarks)
 
-            if (left_eye == 0 or right_eye == 0 or mar == 0):
-                sleepiness += 1
-                drowsiness = 0
-                awakeness = 0
-                if (sleepiness>6):
-                    activity = "Alert! Are you sleeping?"
-                    color = (0,0,255)
-            elif (left_eye == 1 or right_eye ==1 or mar == 3):
-                sleepiness = 0
-                drowsiness +=1 
-                awakeness = 0
-                if (drowsiness>6):
-                    activity = "Hushh! You looks sleepy!"
-                    color = (0,0,0)
-            elif (left_eye == 2 or right_eye ==2 and mar == 4):
-                drowsiness =0
-                sleepiness =0
-                awakeness +=1
-                if (awakeness>6):
-                    activity = "Having a safe driving!"
-                    color = (0,255,0)
-            elif (left_eye == 2 or right_eye ==2 and mar == 3):
-                drowsiness =0
-                sleepiness +=1
-                awakeness  =0
-                if (sleepiness>1):
-                    activity = "Hushh! You looks sleepy!"
-                    color = (0,255,0)
-        
-    else:
-        print("Error!")
-        activity = "No Driver!"
-        color = (0,0,0)
+            check_activity(left_eye, right_eye, mar)
 
-    cv2.rectangle(frame, (10,5),(445,40), (255,255,255), -1 )
-    cv2.putText(frame, activity, (15,30), cv2.FONT_HERSHEY_COMPLEX, 1, color ,2 )
-    
-    cv2.imshow("Hola!", frame) 
-    
+    else:
+        activity = "No Driver!"
+        color = (0, 0, 0)
+
+    draw_activity_text(frame, activity, color)
+
+    cv2.imshow("Hola!", frame)
+
     key = cv2.waitKey(1)
     if key == 27:
         break
+
 cap.release()
 cv2.destroyAllWindows()
