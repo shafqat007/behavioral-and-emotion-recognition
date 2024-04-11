@@ -6,6 +6,8 @@ import pygame
 
 print("Imported Successfully!")
 
+nose_length_threshold = 2.05
+
 def initialize_camera():
     cap = cv2.VideoCapture(1)
     if not cap.isOpened():
@@ -46,6 +48,27 @@ def detect_lip_distance(shape):
         return 3
     else:
         return 4
+    
+def detect_nose_length_ratio(shape):
+    # Points for nose length calculation
+    nose_start = shape[27]  # Point 28
+    nose_end = shape[30]  # Point 31
+
+    # Points for other facial feature (for example, distance between eyes)
+    other_feature_start = shape[32]  # Point 33
+    other_feature_end = shape[35]  # Point 36
+
+    # Calculate distances
+    nose_length = calculate_distance(nose_start, nose_end)
+    other_feature_length = calculate_distance(other_feature_start, other_feature_end)
+
+    # Calculate ratio
+    nose_length_ratio = nose_length / other_feature_length
+
+    return nose_length_ratio
+
+# Add this function to the code before the while loop
+
 
 def detect_face_features(face, gray, faceLandmarks):
     landmarks = faceLandmarks(gray, face)
@@ -87,6 +110,14 @@ def check_activity(left_eye, right_eye, mar):
         if sleepiness > 1:
             activity = "Hushh! You look sleepy!"
             color = (0, 255, 0)
+            
+    nose_length_ratio = detect_nose_length_ratio(landmarks)
+    # print('nose_length_ratio', nose_length_ratio)
+    if nose_length_ratio > nose_length_threshold:
+        activity = "Hushh! Be alert!!"
+        color = (0, 0, 0)
+        if sound_enabled:
+            play_alert_sound()
 
 def draw_activity_text(frame, activity, color):
     cv2.rectangle(frame, (10, 5), (445, 40), (255, 255, 255), -1)
