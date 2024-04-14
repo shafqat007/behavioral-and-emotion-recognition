@@ -48,7 +48,7 @@
         $(document).ready(function () {
             // Start/Stop Behavioral Tracking
             $('#start-behavioral-tracking').click(function () {
-                $('#behavioral-tracking').attr('src', '{{ url_for('video_feed') }}');
+                $('#behavioral-tracking').attr('src', '{{ url_for('behavioral') }}');
             });
 
             $('#stop-behavioral-tracking').click(function () {

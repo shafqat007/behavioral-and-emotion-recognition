@@ -141,10 +141,11 @@ def index():
     """Video streaming home page."""
     return render_template('index.html')
 
-@app.route('/video_feed')
-def video_feed():
+@app.route('/behavioral')
+def behavioral():
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
