@@ -136,6 +136,10 @@ def generate_frames():
 
     cap.release()
 
+
+def detect_emotions():
+    pass
+
 @app.route('/')
 def index():
     """Video streaming home page."""
@@ -143,6 +147,12 @@ def index():
 
 @app.route('/behavioral')
 def behavioral():
+    """Video streaming route. Put this in the src attribute of an img tag."""
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+@app.route('/emotion')
+def emotion():
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 

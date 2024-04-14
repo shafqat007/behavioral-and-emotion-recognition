@@ -28,7 +28,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        New Codebase
+                        Emotion Detection
                     </div>
                     <div class="card-body">
                         <img id="new-codebase" class="img-fluid"> <!-- Placeholder image -->
@@ -57,7 +57,7 @@
 
             // Start/Stop New Codebase
             $('#start-new-codebase').click(function () {
-                $('#new-codebase').attr('src', 'URL_OF_NEW_CODEBASE_VIDEO_FEED'); // Replace with the URL of the new codebase video feed
+                $('#new-codebase').attr('src', '{{ url_for('emotion') }}'); // Replace with the URL of the new codebase video feed
             });
 
             $('#stop-new-codebase').click(function () {
