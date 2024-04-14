@@ -2,3 +2,9 @@ opencv-python
 matplotlib
 tf-keras
 deepface
+pygame
+cmake
+wheel
+pyproject-toml
+dlib
+imutils
