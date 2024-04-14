@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Monitoring System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Center title */
+        .title {
+            text-align: center;
+            margin-top: 50px; /* Add top margin */
+            font-family: 'Arial Black', sans-serif; /* Set font family */
+            color: #333; /* Set font color */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add text shadow */
+            font-size: 36px; /* Set font size */
+        }
+    </style>
+</head>
+<body>
+    <div class="title">
+        <h1>BEHAVIORAL AND EMOTION RECOGNITION IN HCI SYSTEM</h1>
+    </div>
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Card for Behavioral Tracking -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Behavioral Tracking
+                    </div>
+                    <div class="card-body">
+                        <img id="behavioral-tracking" class="img-fluid">
+                    </div>
+                    <div class="card-footer">
+                        <button id="start-behavioral-tracking" class="btn btn-primary">Start Tracking</button>
+                        <button id="stop-behavioral-tracking" class="btn btn-danger">Stop Tracking</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Card for New Codebase -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Emotion Detection
+                    </div>
+                    <div class="card-body">
+                        <img id="new-codebase" class="img-fluid"> <!-- Placeholder image -->
+                    </div>
+                    <div class="card-footer">
+                        <button id="start-new-codebase" class="btn btn-primary">Start Detecting</button>
+                        <button id="stop-new-codebase" class="btn btn-danger">Stop Detecting</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Start/Stop Behavioral Tracking
+            $('#start-behavioral-tracking').click(function () {
+                $('#behavioral-tracking').attr('src', '{{ url_for('behavioral') }}');
+            });
+
+            $('#stop-behavioral-tracking').click(function () {
+                $('#behavioral-tracking').attr('src', '');
+            });
+
+            // Start/Stop New Codebase
+            $('#start-new-codebase').click(function () {
+                $('#new-codebase').attr('src', '{{ url_for('emotion') }}'); // Replace with the URL of the new codebase video feed
+            });
+
+            $('#stop-new-codebase').click(function () {
+                $('#new-codebase').attr('src', '');
+            });
+        });
+    </script>
+</body>
+</html>
