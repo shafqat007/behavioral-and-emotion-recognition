@@ -3,94 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time Video Streaming</title>
-    <!-- Include Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Center the content */
-        .center-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        /* Style the video container */
-        .video-container {
-            border: 2px solid #ccc;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Style the video element */
-        #video-stream {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-
-        /* Style the buttons */
-        .btn-stream {
-            margin-top: 20px;
-            font-size: 18px;
-            padding: 10px 20px;
-        }
-
-        .btn-start {
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-        }
-
-        .btn-stop {
-            background-color: #dc3545;
-            color: #fff;
-            border: none;
-        }
-
-        /* Align buttons horizontally */
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-    </style>
+    <title>Driver Monitoring System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container center-content">
-        <h1 class="text-center mb-4">Real-Time Video Streaming</h1>
-        <div class="video-container">
-            <img id="video-stream" src="" alt="Video Stream">
-        </div>
-        <div class="button-container">
-            <button id="start-stream" class="btn btn-stream btn-start mr-2">Start Streaming</button>
-            <button id="stop-stream" class="btn btn-stream btn-stop">Stop Streaming</button>
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Card for Behavioral Tracking -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Behavioral Tracking
+                    </div>
+                    <div class="card-body">
+                        <img id="behavioral-tracking" class="img-fluid">
+                    </div>
+                    <div class="card-footer">
+                        <button id="start-behavioral-tracking" class="btn btn-primary">Start Tracking</button>
+                        <button id="stop-behavioral-tracking" class="btn btn-danger">Stop Tracking</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Card for New Codebase -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        New Codebase
+                    </div>
+                    <div class="card-body">
+                        <img id="new-codebase" class="img-fluid"> <!-- Placeholder image -->
+                    </div>
+                    <div class="card-footer">
+                        <button id="start-new-codebase" class="btn btn-primary">Start</button>
+                        <button id="stop-new-codebase" class="btn btn-danger">Stop</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Include Bootstrap JS (Optional) -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Include jQuery (Optional, needed for Bootstrap) -->
+    <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // Hide stop button initially
-            $('#stop-stream').hide();
-
-            // Function to start streaming
-            $('#start-stream').click(function() {
-                $('#start-stream').hide();
-                $('#stop-stream').show();
-                $('#video-stream').attr('src', '{{ url_for('video_feed') }}');
+        $(document).ready(function () {
+            // Start/Stop Behavioral Tracking
+            $('#start-behavioral-tracking').click(function () {
+                $('#behavioral-tracking').attr('src', '{{ url_for('video_feed') }}');
             });
 
-            // Function to stop streaming
-            $('#stop-stream').click(function() {
-                $('#stop-stream').hide();
-                $('#start-stream').show();
-                $('#video-stream').attr('src', '');
+            $('#stop-behavioral-tracking').click(function () {
+                $('#behavioral-tracking').attr('src', '');
+            });
+
+            // Start/Stop New Codebase
+            $('#start-new-codebase').click(function () {
+                $('#new-codebase').attr('src', 'URL_OF_NEW_CODEBASE_VIDEO_FEED'); // Replace with the URL of the new codebase video feed
+            });
+
+            $('#stop-new-codebase').click(function () {
+                $('#new-codebase').attr('src', '');
             });
         });
     </script>
