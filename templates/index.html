@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Video Streaming</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Center the content */
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Style the video container */
+        .video-container {
+            border: 2px solid #ccc;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style the video element */
+        #video-stream {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        /* Style the buttons */
+        .btn-stream {
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 10px 20px;
+        }
+
+        .btn-start {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-stop {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+        }
+
+        /* Align buttons horizontally */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container center-content">
+        <h1 class="text-center mb-4">Real-Time Video Streaming</h1>
+        <div class="video-container">
+            <img id="video-stream" src="" alt="Video Stream">
+        </div>
+        <div class="button-container">
+            <button id="start-stream" class="btn btn-stream btn-start mr-2">Start Streaming</button>
+            <button id="stop-stream" class="btn btn-stream btn-stop">Stop Streaming</button>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS (Optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Include jQuery (Optional, needed for Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Hide stop button initially
+            $('#stop-stream').hide();
+
+            // Function to start streaming
+            $('#start-stream').click(function() {
+                $('#start-stream').hide();
+                $('#stop-stream').show();
+                $('#video-stream').attr('src', '{{ url_for('video_feed') }}');
+            });
+
+            // Function to stop streaming
+            $('#stop-stream').click(function() {
+                $('#stop-stream').hide();
+                $('#start-stream').show();
+                $('#video-stream').attr('src', '');
+            });
+        });
+    </script>
+</body>
+</html>
