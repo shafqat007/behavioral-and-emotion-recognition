@@ -6,10 +6,7 @@ import pygame
 
 print("Imported Successfully!")
 
-# Initialize pygame
 pygame.mixer.init()
-
-# Load the sound file
 alert_sound = pygame.mixer.Sound("alert.wav")
 
 cap = cv2.VideoCapture(0)
@@ -33,9 +30,9 @@ def blinkingDetection(a,b,c,d,e,f):
     long_distance = distance(a,f)
     ratio = short_distance / (2.0*long_distance)
 
-    if (ratio > 0.25):
+    if (ratio > 0.23):
         return 2
-    elif (ratio > 0.21 and ratio <= 0.25):
+    elif (ratio > 0.21 and ratio <= 0.23):
         return 1
     else:
         return 0
