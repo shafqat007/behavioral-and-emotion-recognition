@@ -24,7 +24,7 @@
     <div class="container mt-5">
         <div class="row">
             <!-- Card for Behavioral Tracking -->
-            <div class="col-md-6">
+            <div class="col-md-6 mb-5">
                 <div class="card">
                     <div class="card-header">
                         Behavioral Tracking
@@ -39,7 +39,7 @@
                 </div>
             </div>
             <!-- Card for New Codebase -->
-            <div class="col-md-6">
+            <div class="col-md-6 mb-5">
                 <div class="card">
                     <div class="card-header">
                         Emotion Detection
@@ -50,6 +50,22 @@
                     <div class="card-footer">
                         <button id="start-new-codebase" class="btn btn-primary">Start Detecting</button>
                         <button id="stop-new-codebase" class="btn btn-danger">Stop Detecting</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card for Custom Classification -->
+            <div class="col-md-6 mb-5">
+                <div class="card">
+                    <div class="card-header">
+                        Cell Phone Detection
+                    </div>
+                    <div class="card-body">
+                        <img id="custom-classification" class="img-fluid"> <!-- Placeholder image -->
+                    </div>
+                    <div class="card-footer">
+                        <button id="start-custom-classification" class="btn btn-primary">Start Detecting</button>
+                        <button id="stop-custom-classification" class="btn btn-danger">Stop Detecting</button>
                     </div>
                 </div>
             </div>
@@ -76,6 +92,15 @@
 
             $('#stop-new-codebase').click(function () {
                 $('#new-codebase').attr('src', '');
+            });
+
+            // Start/Stop Custom Classification
+            $('#start-custom-classification').click(function () {
+                $('#custom-classification').attr('src', '{{ url_for('classification') }}'); // Replace with the URL of the new codebase video feed
+            });
+
+            $('#stop-custom-classification').click(function () {
+                $('#custom-classification').attr('src', '');
             });
         });
     </script>
