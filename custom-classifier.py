@@ -1,10 +1,14 @@
 import cv2
 from ultralytics import YOLO
 import numpy as np
+import pygame
+
 
 cap = cv2.VideoCapture(0)
 model = YOLO("yolov8m.pt")
 
+pygame.mixer.init()
+alert_sound = pygame.mixer.Sound("alert.wav")
 
 classes = []
 with open('classes.txt', "r") as file_object:
@@ -36,6 +40,7 @@ while True:
             (x, y, x2, y2) = bbox
             cv2.rectangle(frame, (x, y), (x2, y2), (0, 0, 225), 2)
             cv2.putText(frame, "Cell Phone", (x, y - 5), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 225), 2)
+            alert_sound.play()
     
     
     cv2.imshow('frame', frame)
