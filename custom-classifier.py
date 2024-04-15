@@ -43,7 +43,7 @@ while True:
             alert_sound.play()
     
     
-    cv2.imshow('frame', frame)
+    cv2.imshow('frame', cv2.resize(frame, (640, 480)))
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

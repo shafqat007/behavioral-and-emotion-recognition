@@ -41,7 +41,7 @@ def main():
             draw_emotion_text(frame, face, emotion)
             play_alert_sound(emotion)
 
-        cv2.imshow("yayy", frame)
+        cv2.imshow("yayy", cv2.resize(frame, (640, 480)))
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
