@@ -10,11 +10,11 @@ model = YOLO("yolov8m.pt")
 pygame.mixer.init()
 alert_sound = pygame.mixer.Sound("alert.wav")
 
-classes = []
+text_classes = []
 with open('classes.txt', "r") as file_object:
     for class_name in file_object.readlines():
         class_name = class_name.strip()
-        classes.append(class_name)
+        text_classes.append(class_name)
         
 # print(classes)
 # print(type(classes))
@@ -39,7 +39,7 @@ while True:
         if cls == 67:
             (x, y, x2, y2) = bbox
             cv2.rectangle(frame, (x, y), (x2, y2), (0, 0, 225), 2)
-            cv2.putText(frame, "Cell Phone", (x, y - 5), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 225), 2)
+            cv2.putText(frame, text_classes[cls], (x, y - 5), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 225), 2)
             alert_sound.play()
     
     
