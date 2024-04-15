@@ -45,11 +45,11 @@
                         Emotion Detection
                     </div>
                     <div class="card-body">
-                        <img id="new-codebase" class="img-fluid"> <!-- Placeholder image -->
+                        <img id="emotion-detection" class="img-fluid"> <!-- Placeholder image -->
                     </div>
                     <div class="card-footer">
-                        <button id="start-new-codebase" class="btn btn-primary">Start Detecting</button>
-                        <button id="stop-new-codebase" class="btn btn-danger">Stop Detecting</button>
+                        <button id="start-emotion-detection" class="btn btn-primary">Start Detecting</button>
+                        <button id="stop-emotion-detection" class="btn btn-danger">Stop Detecting</button>
                     </div>
                 </div>
             </div>
@@ -85,13 +85,13 @@
                 $('#behavioral-tracking').attr('src', '');
             });
 
-            // Start/Stop New Codebase
-            $('#start-new-codebase').click(function () {
-                $('#new-codebase').attr('src', '{{ url_for('emotion') }}'); // Replace with the URL of the new codebase video feed
+            // Start/Stop Emotion Detection
+            $('#start-emotion-detection').click(function () {
+                $('#emotion-detection').attr('src', '{{ url_for('emotion') }}'); // Replace with the URL of the new codebase video feed
             });
 
-            $('#stop-new-codebase').click(function () {
-                $('#new-codebase').attr('src', '');
+            $('#stop-emotion-detection').click(function () {
+                $('#emotion-detection').attr('src', '');
             });
 
             // Start/Stop Custom Classification

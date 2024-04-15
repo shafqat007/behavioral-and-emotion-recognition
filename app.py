@@ -78,7 +78,7 @@ def lip_distance(shape):
     else:
         return 4
 
-def generate_frames():
+def generate_frames_drowsiness():
     sleepiness = 0
     drowsiness = 0
     awakeness = 0
@@ -247,7 +247,7 @@ def index():
 @app.route('/behavioral')
 def behavioral():
     """Video streaming route. Put this in the src attribute of an img tag."""
-    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_frames_drowsiness(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route('/emotion')
