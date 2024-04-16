@@ -6,10 +6,7 @@ import pygame
 
 print("Imported Successfully!")
 
-# Initialize pygame
 pygame.mixer.init()
-
-# Load the sound file
 alert_sound = pygame.mixer.Sound("alert.wav")
 
 cap = cv2.VideoCapture(0)
@@ -33,9 +30,9 @@ def blinkingDetection(a,b,c,d,e,f):
     long_distance = distance(a,f)
     ratio = short_distance / (2.0*long_distance)
 
-    if (ratio > 0.25):
+    if (ratio > 0.23):
         return 2
-    elif (ratio > 0.21 and ratio <= 0.25):
+    elif (ratio > 0.21 and ratio <= 0.23):
         return 1
     else:
         return 0
@@ -104,7 +101,7 @@ while True:
                 sleepiness =0
                 awakeness +=1
                 if (awakeness>6):
-                    activity = "Having a safe driving!"
+                    activity = "Looking Forward!"
                     color = (0,255,0)
             elif (left_eye == 2 or right_eye ==2 and mar == 3):
                 drowsiness =0
@@ -126,7 +123,7 @@ while True:
     cv2.rectangle(frame, (10,5),(445,40), (255,255,255), -1 )
     cv2.putText(frame, activity, (15,30), cv2.FONT_HERSHEY_COMPLEX, 1, color ,2 )
 
-    cv2.imshow("DMS!", frame) 
+    cv2.imshow("DMS!", cv2.resize(frame, (640, 480))) 
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

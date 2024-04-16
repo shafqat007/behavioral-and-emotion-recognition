@@ -5,6 +5,7 @@ import numpy as np
 from imutils import face_utils
 import pygame
 from deepface import DeepFace
+from ultralytics import YOLO
 
 
 app = Flask(__name__)
@@ -77,7 +78,7 @@ def lip_distance(shape):
     else:
         return 4
 
-def generate_frames():
+def generate_frames_drowsiness():
     sleepiness = 0
     drowsiness = 0
     awakeness = 0
@@ -193,6 +194,51 @@ def generate_frames_emotion():
     cv2.destroyAllWindows()
 
 
+def generate_frames_classification():
+    cap = cv2.VideoCapture(0)
+    model = YOLO("yolov8m.pt")
+
+    pygame.mixer.init()
+    alert_sound = pygame.mixer.Sound("alert.wav")
+
+    text_classes = []
+    with open('classes.txt', "r") as file_object:
+        for class_name in file_object.readlines():
+            class_name = class_name.strip()
+            text_classes.append(class_name)
+            
+    if not cap.isOpened():
+        print("Error: Couldn't open camera")
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        exit()
+
+    while True:
+        ret, frame = cap.read()
+
+        if not ret:
+            print("Error: Can't receive frame (stream end?). Exiting ...")
+            break
+
+        results = model(frame, device="mps")
+        result = results[0]
+        bboxes = np.array(result.boxes.xyxy.cpu(), dtype="int")
+        classes = np.array(result.boxes.cls.cpu(), dtype="int")
+        for cls, bbox in zip(classes, bboxes):
+            if cls == 67:
+                (x, y, x2, y2) = bbox
+                cv2.rectangle(frame, (x, y), (x2, y2), (0, 0, 225), 2)
+                cv2.putText(frame, text_classes[cls], (x, y - 5), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 225), 2)
+                alert_sound.play()
+
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+    cap.release()
+  
+
 @app.route('/')
 def index():
     """Video streaming home page."""
@@ -201,7 +247,7 @@ def index():
 @app.route('/behavioral')
 def behavioral():
     """Video streaming route. Put this in the src attribute of an img tag."""
-    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_frames_drowsiness(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route('/emotion')
@@ -209,6 +255,15 @@ def emotion():
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(generate_frames_emotion(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/classification')
+def classification():
+    """Video streaming route. Put this in the src attribute of an img tag."""
+    return Response(generate_frames_classification(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
+
+
+  
+    
 if __name__ == '__main__':
     app.run(debug=True)
