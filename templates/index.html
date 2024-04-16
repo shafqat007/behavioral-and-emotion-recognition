@@ -15,6 +15,49 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add text shadow */
             font-size: 36px; /* Set font size */
         }
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            padding: 15px;
+            background-color: #212529;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            color: #fff;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-text {
+            margin-right: 10px;
+        }
+
+        .footer-text span {
+            display: block;
+            font-weight: bold;
+        }
+
+        .footer-text span.department {
+            font-size: 16px;
+        }
+
+        .footer-text span.student-info {
+            font-size: 14px;
+        }
+
+        .footer-logo {
+            width: 40px;
+            height: auto;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -24,7 +67,7 @@
     <div class="container mt-5">
         <div class="row">
             <!-- Card for Behavioral Tracking -->
-            <div class="col-md-6">
+            <div class="col-md-6 mb-5">
                 <div class="card">
                     <div class="card-header">
                         Behavioral Tracking
@@ -39,19 +82,46 @@
                 </div>
             </div>
             <!-- Card for New Codebase -->
-            <div class="col-md-6">
+            <div class="col-md-6 mb-5">
                 <div class="card">
                     <div class="card-header">
                         Emotion Detection
                     </div>
                     <div class="card-body">
-                        <img id="new-codebase" class="img-fluid"> <!-- Placeholder image -->
+                        <img id="emotion-detection" class="img-fluid"> <!-- Placeholder image -->
                     </div>
                     <div class="card-footer">
-                        <button id="start-new-codebase" class="btn btn-primary">Start Detecting</button>
-                        <button id="stop-new-codebase" class="btn btn-danger">Stop Detecting</button>
+                        <button id="start-emotion-detection" class="btn btn-primary">Start Detecting</button>
+                        <button id="stop-emotion-detection" class="btn btn-danger">Stop Detecting</button>
                     </div>
                 </div>
+            </div>
+
+            <!-- Card for Custom Classification -->
+            <div class="col-md-6 mb-5">
+                <div class="card">
+                    <div class="card-header">
+                        Cell Phone Detection
+                    </div>
+                    <div class="card-body">
+                        <img id="custom-classification" class="img-fluid"> <!-- Placeholder image -->
+                    </div>
+                    <div class="card-footer">
+                        <button id="start-custom-classification" class="btn btn-primary">Start Detecting</button>
+                        <button id="stop-custom-classification" class="btn btn-danger">Stop Detecting</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container footer-content">
+            <div class="footer-text">
+                <span class="student-info">Raihan Islam</span>
+                <span class="student-info">Student ID: 1809009</span>
+                <span class="department">Department of Mechatronics and Industrial Engineering</span>
             </div>
         </div>
     </div>
@@ -69,13 +139,22 @@
                 $('#behavioral-tracking').attr('src', '');
             });
 
-            // Start/Stop New Codebase
-            $('#start-new-codebase').click(function () {
-                $('#new-codebase').attr('src', '{{ url_for('emotion') }}'); // Replace with the URL of the new codebase video feed
+            // Start/Stop Emotion Detection
+            $('#start-emotion-detection').click(function () {
+                $('#emotion-detection').attr('src', '{{ url_for('emotion') }}'); // Replace with the URL of the new codebase video feed
             });
 
-            $('#stop-new-codebase').click(function () {
-                $('#new-codebase').attr('src', '');
+            $('#stop-emotion-detection').click(function () {
+                $('#emotion-detection').attr('src', '');
+            });
+
+            // Start/Stop Custom Classification
+            $('#start-custom-classification').click(function () {
+                $('#custom-classification').attr('src', '{{ url_for('classification') }}'); // Replace with the URL of the new codebase video feed
+            });
+
+            $('#stop-custom-classification').click(function () {
+                $('#custom-classification').attr('src', '');
             });
         });
     </script>
